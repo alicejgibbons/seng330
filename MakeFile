@@ -1,0 +1,4 @@
+all: prototype
+
+prototype:
+	g++ -w prototype.cpp -o prototype

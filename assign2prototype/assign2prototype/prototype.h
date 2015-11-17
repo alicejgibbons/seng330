@@ -1,3 +1,11 @@
+//
+//  prototype.h
+//  assign2prototype
+//
+//  Created by Alice Gibbons on 2015-11-13.
+//  Copyright © 2015 Alice Gibbons. All rights reserved.
+//
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -22,7 +30,7 @@ public:
     void payFee(int num){
         std::cout << "Member " << num << " has paid for the next month\n";
     }
-
+    
 };
 
 class YearlyMember: public Member {
@@ -31,13 +39,13 @@ public:
     void payFee(int num){
         std::cout << "Member " << num << " has paid for the next year\n";
     }
-
+    
 };
-
-int main() {
-	int input;
+/*
+int main(int argc, char * argv[]) {
+    int input;
     std::vector<Member*> members;
-
+    
     while (true) {
         std::cout << "\n\nEnter the member that is paying:\nMonthly (1) \nYearly (2) \nNo member (0) \n";
         std::cin >> input;
@@ -49,15 +57,15 @@ int main() {
             std::cout << "You have entered an incorrect member type\n";
         }
     }
-
-	for(int i = 0; i < members.size(); ++i){
+    
+    for(int i = 0; i < members.size(); ++i){
         members[i]->payFee(i+1);
-	}
-        
+    }
+    
     for(int i =0; i < members.size(); ++i){
         delete members[i];
     }
-};
+};*/
 
 Member* Factory::member_prototypes[] = {
     0, new MonthlyMember, new YearlyMember
@@ -66,11 +74,11 @@ Member* Factory::member_prototypes[] = {
 Member* Factory::make_member(int input){
     return member_prototypes[input] -> clone();
 };
-            
-            
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
+
+
