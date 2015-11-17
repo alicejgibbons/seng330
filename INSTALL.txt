@@ -1,1 +1,20 @@
-Usage Instructions to build project
+#Seng 330 Assignment 2
+Alice Gibbons, V00759604
+
+##Installation Instructions
+
+1. Run the Makefile
+	```
+	make
+	```
+2. Run the resulting executable 'prototype'
+	```
+	./prototype	
+	```
+
+## System Requirements
+* To open the project files, you must have XCode 7.1.1.
+* To compile the source code you must have g++ (C++11) and make installed.
+* To compile the source code you also must have the necessary header files stored in the same file as the source code <http://uscilab.github.io/cereal/quickstart.html>.
+* To run the tests, you must have gtest installed <https://code.google.com/p/googletest/>.
+* To view the Latex (.tex) documents, you must compile them with a Latex compiler.

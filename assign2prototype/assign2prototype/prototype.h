@@ -11,12 +11,18 @@
 #include <vector>
 #include <fstream>
 
+/* Member prototype base class */
 class Member {
 public:
     virtual Member* clone() = 0;
     virtual void payFee(int num) = 0;
+    virtual void serialize() = 0;
+    template <class Archive>
+    void serialize( Archive & archive ){
+    }
 };
 
+/* Member prototype factory */
 class Factory{
 public:
     static Member* make_member(int input);
@@ -24,53 +30,47 @@ private:
     static Member* member_prototypes[3];
 };
 
+/* Derived type MonthlyMember */
 class MonthlyMember: public Member {
 public:
     Member* clone(){ return new MonthlyMember; }
     void payFee(int num){
         std::cout << "Member " << num << " has paid for the next month\n";
     }
-    
+    void serialize(){
+    }
 };
 
+/* Derived type YearlyMember */
 class YearlyMember: public Member {
 public:
     Member* clone(){ return new YearlyMember; }
     void payFee(int num){
         std::cout << "Member " << num << " has paid for the next year\n";
     }
-    
+    void serialize(){
+    }
 };
-/*
-int main(int argc, char * argv[]) {
-    int input;
-    std::vector<Member*> members;
-    
-    while (true) {
-        std::cout << "\n\nEnter the member that is paying:\nMonthly (1) \nYearly (2) \nNo member (0) \n";
-        std::cin >> input;
-        if(input == 0){
-            break;
-        } else if(input == 1 || input == 2){
-            members.push_back(Factory::make_member(input));
-        } else {
-            std::cout << "You have entered an incorrect member type\n";
-        }
-    }
-    
-    for(int i = 0; i < members.size(); ++i){
-        members[i]->payFee(i+1);
-    }
-    
-    for(int i =0; i < members.size(); ++i){
-        delete members[i];
-    }
-};*/
 
+/* Convert *Member to be a smart pointer instead of a raw pointer for cereal serialization */
+class Ptr{
+    Member *ptr;
+public:
+    explicit Ptr(Member *p = NULL) { ptr = p; }
+    ~Ptr(){ delete(ptr); }
+    Member &operator *(){ return *ptr; }
+    template <class Archive>
+    void serialize(Archive & archive){
+        archive(*ptr);
+    }
+};
+
+/* List of possible member types (derived classes) */
 Member* Factory::member_prototypes[] = {
     0, new MonthlyMember, new YearlyMember
 };
 
+/* Function called to clone the protypes  */
 Member* Factory::make_member(int input){
     return member_prototypes[input] -> clone();
 };

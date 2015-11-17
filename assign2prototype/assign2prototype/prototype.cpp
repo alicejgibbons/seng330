@@ -14,7 +14,7 @@
 #include <cereal/types/vector.hpp>
 #include <cereal/types/memory.hpp>
 
-
+/* Member prototype base class */
 class Member {
 public:
     virtual Member* clone() = 0;
@@ -25,6 +25,7 @@ public:
     }
 };
 
+/* Member prototype factory */
 class Factory{
 public:
     static Member* make_member(int input);
@@ -32,6 +33,7 @@ private:
     static Member* member_prototypes[3];
 };
 
+/* Derived type MonthlyMember */
 class MonthlyMember: public Member {
 public:
     Member* clone(){ return new MonthlyMember; }
@@ -42,6 +44,7 @@ public:
     }
 };
 
+/* Derived type YearlyMember */
 class YearlyMember: public Member {
 public:
     Member* clone(){ return new YearlyMember; }
@@ -50,10 +53,9 @@ public:
     }
     void serialize(){
     }
-    
 };
 
-//using smart pointers instead of raw pointers
+/* Convert *Member to be a smart pointer instead of a raw pointer for cereal serialization */
 class Ptr{
     Member *ptr;
 public:
@@ -64,17 +66,14 @@ public:
     void serialize(Archive & archive){
         archive(*ptr);
     }
-    
 };
 
 int main() {
     int input;
-    //std::vector<Member*> members;
-    std::vector<Ptr> members;//??
-   // Ptr ptr(Factory::make_member(1));
+    std::vector<Ptr> members;       //smart pointers
 
     {
-        //read in from from serialized data
+        //read in JSON from from serialized data
         std::ifstream ifs( "membersPaid.json" );
         cereal::JSONInputArchive archive( ifs );
         archive(members);
@@ -98,17 +97,21 @@ int main() {
     }
     
     {
-        //serialize data to file
+        //serialize JSON data to file
         std::ofstream ofs("membersPaid.json");
         cereal::JSONOutputArchive archive(ofs);
         archive(members);
     }
+    
+    //Notice smart pointers are deleted automatically
 };
 
+/* List of possible member types (derived classes) */
 Member* Factory::member_prototypes[] = {
     0, new MonthlyMember, new YearlyMember
 };
 
+/* Function called to clone the protypes  */
 Member* Factory::make_member(int input){
     return member_prototypes[input] -> clone();
 };
